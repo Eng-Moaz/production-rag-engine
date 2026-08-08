@@ -1,13 +1,15 @@
 from dotenv import load_dotenv
+import os
 load_dotenv()
 
-from langchain_openrouter import ChatOpenRouter
+from langchain_groq import ChatGroq
 
 
 def main():
-    llm = ChatOpenRouter(model="google/gemma-4-31b-it:free", temperature=0)
-    response = llm.invoke("Say 'setup complete' in one word")
-    print(response)
+    llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
+    response = llm.invoke("Say 'setup complete'")
+    print(response.content)
 
 if __name__ == "__main__":
     main()
+    
