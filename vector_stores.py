@@ -1,4 +1,5 @@
 from langchain_chroma import Chroma
+from langchain_core import documents
 from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 import tempfile
@@ -47,22 +48,41 @@ SAMPLE_DOCS = [
 def set_up_chroma():
     with tempfile.TemporaryDirectory() as tmpdir:
         chroma_vectordb = Chroma.from_documents(
-            documents=SAMPLE_DOCS,
-            embedding=embeddings_model,
-            persist_directory=tmpdir,
-        )
+                documents=SAMPLE_DOCS,
+                embedding=embeddings_model,
+                persist_directory=tmpdir
+                )
 
         print(f"Vector store created {chroma_vectordb._collection.count()} documents and persisted.")
 
-        query = "What is Langchain"
-        results = chroma_vectordb.similarity_search(query, k=2)
+        query = "Explain vector stores"
+        results = chroma_vectordb.similarity_search_with_score(query, k=3)
 
-        for i, doc in enumerate(results):
+        for i, (doc, score) in enumerate(results):
+            final_score = 1 / 1 + score
             print(
-                f"Result {i + 1}: {doc.page_content} (Source: {doc.metadata['source']})"
+                    f"Result {i + 1}: {doc.page_content} (Score: {final_score})"
             )
+
+def metadata_filtering():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        chroma_vectordb = Chroma.from_documents(
+                documents=SAMPLE_DOCS,
+                embedding=embeddings_model,
+                persist_directory=tmpdir
+                )
+        query = "What databases are available"
+        results = chroma_vectordb.similarity_search(query, k=5)
+        for i, doc in enumerate(results):
+            print(f"Result {1+i}: {doc.page_content}")
+
+        filter_criteria = {"topic": "database"}
+        filtered_results = chroma_vectordb.similarity_search(query, k=5, filter=filter_criteria)
+
+        for i, doc in enumerate(filtered_results):
+            print(f"Result {1+i}: {doc.page_content}")
+
 
 if __name__ == "__main__":
     set_up_chroma()
-
 
