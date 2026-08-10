@@ -84,5 +84,5 @@ def metadata_filtering():
 
 
 if __name__ == "__main__":
-    set_up_chroma()
-
+    embedding = embeddings_model.embed_query("hello")
+    print(embedding)
