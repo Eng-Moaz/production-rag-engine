@@ -1,3 +1,4 @@
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from langchain_core import documents
 from langchain_core.documents import Document
@@ -86,3 +87,4 @@ def metadata_filtering():
 if __name__ == "__main__":
     embedding = embeddings_model.embed_query("hello")
     print(embedding)
+

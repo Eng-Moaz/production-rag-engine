@@ -9,6 +9,7 @@ load_dotenv()
 
 def pdf_loader(file_path):
     loader = PyPDFLoader(file_path=file_path)
+
     pages = loader.load()
     print(f"Loaded {len(pages)} pages from the pdf")
     for i, doc in enumerate(pages):
